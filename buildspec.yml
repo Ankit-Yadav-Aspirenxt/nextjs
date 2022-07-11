@@ -18,7 +18,8 @@ phases:
     - echo build started on `date`
     - echo Compiling the Node.js code
 #     - yarn build
-    - next build
+    - npm run build
+#     - next build
     - ls -l -F
   post_build:
     commands:
