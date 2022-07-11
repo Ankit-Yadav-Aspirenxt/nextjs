@@ -1,0 +1,33 @@
+version: 0.2
+
+env:
+    variables:
+        S3_BUCKET: "915756724282-ui-build"
+phases:
+  install:
+    runtime-versions:
+        nodejs: 12
+    commands:
+    - yarn
+    - npm install next -g
+  pre_build:
+    commands:
+    - npm install
+  build:
+    commands:
+    - echo build started on `date`
+    - echo Compiling the Node.js code
+    - next build
+    - ls -l -F
+  post_build:
+    commands:
+            # Clear S3 bucket.
+            - aws s3 rm s3://${S3_BUCKET} --recursive
+            - echo S3 bucket is cleared.
+            - aws s3 sync out s3://${S3_BUCKET} 
+#             - aws s3 cp * s3://${S3_BUCKET} --recursive
+            - echo Build completed on `date`
+# artifacts:
+#     files:
+#       - '**/*'
+#       - dist/**/*
